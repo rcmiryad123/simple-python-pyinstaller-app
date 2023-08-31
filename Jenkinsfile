@@ -1,7 +1,8 @@
 node {
-    docker.image('node:16-buster-slim').withRun('-p 3000:3000') {        
-        stage('Test') {
-            sh './jenkins/scripts/test.sh'
+    stage('Build') {
+        docker.image('python:3.11.5-alpine3.18').inside() {
+            sh 'python -m py_compile sources/add2vals.py sources/calc.py'
+            stash(name: 'compiled-results', includes: 'sources/*.py*')
         }
     }
 }
